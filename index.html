@@ -51,27 +51,38 @@
           message: "Hello Vue!",
         },
         methods: {
-          dropLink: function (ev) {
-            console.log("dropeed");
-            ev.preventDefault();
+          dropLink: function (e) {
+            console.log("dropd");
 
-            if (ev.dataTransfer.items) {
-              // Use DataTransferItemList interface to access the file(s)
-              for (var i = 0; i < ev.dataTransfer.items.length; i++) {
-                // If dropped items aren't files, reject them
-                if (ev.dataTransfer.items[i].kind === "file") {
-                  var file = ev.dataTransfer.items[i].getAsFile();
-                  console.log("... file[" + i + "].name = " + file.name);
-                }
+            e.stopPropagation();
+            e.preventDefault();
+
+            const dt = e.dataTransfer;
+            const files = dt.files;
+
+            this.handleFiles(files);
+          },
+          handleFiles: function (files) {
+            var codeexport = document.getElementById("codeexport");
+            for (let i = 0; i < files.length; i++) {
+              const file = files[i];
+
+              if (!file.type.startsWith("image/")) {
+                continue;
               }
-            } else {
-              // Use DataTransfer interface to access the file(s)
-              for (var i = 0; i < ev.dataTransfer.files.length; i++) {
-                console.dir(ev.dataTransfer.files[i]);
-                console.log(
-                  "... file[" + i + "].name = " + ev.dataTransfer.files[i].name
-                );
-              }
+
+              const img = document.createElement("img");
+              img.classList.add("obj");
+              img.file = file;
+              codeexport.appendChild(img); // Assuming that "preview" is the div output where the content will be displayed.
+
+              const reader = new FileReader();
+              reader.onload = (function (aImg) {
+                return function (e) {
+                  aImg.src = e.target.result;
+                };
+              })(img);
+              reader.readAsDataURL(file);
             }
           },
           submit: function (e) {
