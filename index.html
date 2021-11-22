@@ -10,102 +10,21 @@
       integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="style.css" />
     <title>Document</title>
-    <div id="app">
-      <div class="container">
-        <div id="content">
-          <h1>{{ message }}</h1>
-          <p contenteditable="true">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-            animi quod harum quaerat est expedita, officia ipsam quis! Placeat
-            error iure obcaecati perferendis quasi ullam, tempora amet quae ab
-            ratione? Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Nostrum animi quod harum quaerat est expedita, officia ipsam quis!
-            Placeat error iure obcaecati perferendis quasi ullam, tempora amet
-            quae ab ratione? Lorem ipsum dolor sit amet consectetur adipisicing
-            elit. Nostrum animi quod harum quaerat est expedita, officia ipsam
-            quis! Placeat error iure obcaecati perferendis quasi ullam, tempora
-            amet quae ab ratione?
-          </p>
-        </div>
 
-        <div v-on:drop="dropLink" @dragenter.prevent @dragover.prevent>
-          <p>Drag one or more files to this Drop Zone ...</p>
-        </div>
-
-        <button class="btn btn-light" v-on:click="changetype">
-          change type
-        </button>
-        <button v-on:click="submit">save page</button>
-
-        <div id="codeexport"></div>
-      </div>
+    <div class="container">
+      <div id="editorjs"></div>
+      <button class="btn btn-primary" id="test">test</button>
     </div>
   </head>
   <body>
+    <script src="./editor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/image@2.3.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-    <script>
-      var app = new Vue({
-        el: "#app",
-        data: {
-          message: "Hello Vue!",
-        },
-        methods: {
-          dropLink: function (e) {
-            console.log("dropd");
 
-            e.stopPropagation();
-            e.preventDefault();
-
-            const dt = e.dataTransfer;
-            const files = dt.files;
-
-            this.handleFiles(files);
-          },
-          handleFiles: function (files) {
-            var codeexport = document.getElementById("codeexport");
-            var content = document.getElementById("content");
-            for (let i = 0; i < files.length; i++) {
-              const file = files[i];
-
-              if (!file.type.startsWith("image/")) {
-                continue;
-              }
-
-              const img = document.createElement("img");
-              img.classList.add("obj");
-              img.file = file;
-              content.appendChild(img); // Assuming that "preview" is the div output where the content will be displayed.
-
-              const reader = new FileReader();
-              reader.onload = (function (aImg) {
-                return function (e) {
-                  aImg.src = e.target.result;
-                };
-              })(img);
-              reader.readAsDataURL(file);
-            }
-          },
-          submit: function (e) {
-            var content = document.getElementById("content");
-            var codeexport = document.getElementById("codeexport");
-
-            codeexport.append(content.innerHTML);
-            localStorage.setItem("contebt", content.innerHTML);
-
-            e.preventDefault();
-          },
-          changetype: function () {
-            var e = document.getElementsByTagName("p")[0];
-
-            var d = document.createElement("h1");
-            d.innerHTML = e.innerHTML;
-            d.contentEditable = true;
-
-            e.parentNode.replaceChild(d, e);
-          },
-        },
-      });
-    </script>
+    <script src="./script.js"></script>
   </body>
 </html>
