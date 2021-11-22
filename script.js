@@ -31,12 +31,13 @@ var editor = new EditorJS({
   onReady: () => {},
 });
 
-function createEditor() {}
+var saveState = document.getElementById("saveState");
+saveState.addEventListener("click", function () {});
 
 function log() {
-  data.forEach((element) => {
-    console.log(element);
-  });
+  var codexEditor = document.querySelector(".codex-editor");
+
+  console.log(codexEditor.innerHTML);
 }
 
 var data = [];
