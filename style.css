@@ -6,3 +6,10 @@
   line-height: 1.6em;
   outline: none;
 }
+
+.controls {
+  padding: 16px;
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+}

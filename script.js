@@ -4,6 +4,7 @@ console.log(
 );
 var storageData = JSON.parse(localStorage.getItem("data"));
 var save = document.getElementById("save");
+var email = document.getElementById("email");
 
 var editor = new EditorJS({
   data: storageData,
@@ -41,7 +42,7 @@ var editor = new EditorJS({
   onChange: () => {},
 });
 
-var data = [];
+var data = "";
 function logData() {
   editor.isReady
     .then(() => {
@@ -50,7 +51,7 @@ function logData() {
         .then((outputData) => {
           console.log("Article data: ", outputData);
           localStorage.setItem("data", JSON.stringify(outputData));
-          data = outputData.blocks;
+          data = JSON.stringify(outputData);
         })
         .catch((error) => {
           console.log("Saving failed: ", error);
@@ -64,4 +65,9 @@ function logData() {
   console.log(data);
 }
 
+function emailContent() {
+  email.href = `mailto:dantonr@bdt.co.nz?body=${data}`;
+}
+
 save.addEventListener("click", logData);
+email.addEventListener("click", emailContent);
