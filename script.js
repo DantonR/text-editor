@@ -1,4 +1,12 @@
+console.log(
+  "%cThis will be formatted with blue text",
+  "color: white; font-size: 16px; background: green; padding: 16px; font-family: 'Roboto';"
+);
+var storageData = JSON.parse(localStorage.getItem("data"));
+var save = document.getElementById("save");
+
 var editor = new EditorJS({
+  data: storageData,
   // Other configuration properties
   tools: {
     image: {
@@ -13,6 +21,7 @@ var editor = new EditorJS({
 
     header: {
       class: Header,
+      shortcut: "CTRL+SHIFT+H",
       config: {
         placeholder: "Enter a header",
         levels: [1, 2, 3, 4],
@@ -29,28 +38,18 @@ var editor = new EditorJS({
    * onReady callback
    */
   onReady: () => {},
+  onChange: () => {},
 });
 
-var saveState = document.getElementById("saveState");
-saveState.addEventListener("click", function () {});
-
-function log() {
-  var codexEditor = document.querySelector(".codex-editor");
-
-  console.log(codexEditor.innerHTML);
-}
-
 var data = [];
-
-var test = document.getElementById("test");
-test.addEventListener("click", function () {
+function logData() {
   editor.isReady
     .then(() => {
-      console.log("Editor.js is ready to work!");
       editor
         .save()
         .then((outputData) => {
           console.log("Article data: ", outputData);
+          localStorage.setItem("data", JSON.stringify(outputData));
           data = outputData.blocks;
         })
         .catch((error) => {
@@ -63,4 +62,6 @@ test.addEventListener("click", function () {
     });
 
   console.log(data);
-});
+}
+
+save.addEventListener("click", logData);

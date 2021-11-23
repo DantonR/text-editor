@@ -1,3 +1,8 @@
 .container {
   margin-top: 32px;
+  max-width: 650px;
+}
+.ce-paragraph {
+  line-height: 1.6em;
+  outline: none;
 }
