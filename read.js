@@ -1,25 +1,9 @@
-console.log(
-  "%cThis will be formatted with blue text",
-  "color: white; font-size: 16px; background: black; padding: 16px;"
-);
+var article = "";
+var save = document.getElementById("save");
+var email = document.getElementById("email");
+var storageData = JSON.parse(localStorage.getItem("data"));
 
-fetch("./data.json")
-  .then((response) => response.json())
-  .then((data) => {
-    data.blocks.forEach((element) => {
-      console.log(processText(element));
-    });
-  });
-
-function processHeader(el) {
-  var retVal = "";
-
-  retVal += `<h${el.data.level}>`;
-  retVal += el.data.text;
-  retVal += `</h${el.data.level}>`;
-
-  return retVal;
-}
+localStorage.getItem("data");
 
 var processText = (el) => {
   var retVal = "";
@@ -37,7 +21,68 @@ var processText = (el) => {
       retVal += `</p>`;
 
       return retVal;
+    case "list":
+      retVal += `<ul>`;
+      el.data.items.forEach((item) => {
+        retVal += `<li>${item}</li>`;
+      });
+      retVal += `</ul>`;
+
+      return retVal;
     default:
       return "null";
   }
 };
+
+var setArticleVar = (data) => {
+  data.forEach((element) => {
+    article += processText(element);
+  });
+
+  article = article.replaceAll("\n", " ");
+
+  document.querySelector(".modal-body").innerHTML = article;
+};
+
+setArticleVar(storageData.blocks);
+
+function processHeader(el) {
+  var retVal = "";
+
+  retVal += `<h${el.data.level}>`;
+  retVal += el.data.text;
+  retVal += `</h${el.data.level}>`;
+
+  return retVal;
+}
+
+var data = "";
+function logData() {
+  editor.isReady
+    .then(() => {
+      editor
+        .save()
+        .then((outputData) => {
+          var title = outputData.blocks[0].data.text;
+          console.log("Article data: ", outputData);
+          localStorage.setItem(title, JSON.stringify(outputData));
+          data = JSON.stringify(outputData);
+        })
+        .catch((error) => {
+          console.log("Saving failed: ", error);
+        });
+      /** Do anything you need after editor initialization */
+    })
+    .catch((reason) => {
+      console.log(`Editor.js initialization failed because of ${reason}`);
+    });
+
+  console.log(data);
+}
+
+function emailContent() {
+  email.href = `mailto:dantonr@bdt.co.nz?body=${data}`;
+}
+
+save.addEventListener("click", logData);
+email.addEventListener("click", emailContent);
